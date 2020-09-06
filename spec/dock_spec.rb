@@ -4,6 +4,10 @@ require './lib/dock'
 
 describe Dock do
   subject { Dock.new('The Rowing Dock', 3) }
+  before do
+    @kayak = Boat.new(:kayak, 20)
+    @patrick = Renter.new('Patrick Star', '4242424242424242')
+  end
 
   describe '#init' do
     it 'is an instance of Dock' do
@@ -24,12 +28,35 @@ describe Dock do
   end
 
   describe '#rent' do
-    it 'add rented boats to rental_log' do
-      kayak = Boat.new(:kayak, 20)
-      patrick = Renter.new('Patrick Star', '4242424242424242')
-      subject.rent(kayak, patrick)
+    it 'adds rented boats to rental_log' do
+      subject.rent(@kayak, @patrick)
+      expect(subject.rental_log).to eql({ @kayak => @patrick })
+    end
+  end
 
-      expect(subject.rental_log).to eql({ kayak => patrick })
+  describe '#charge' do
+    before { subject.rent(@kayak, @patrick) }
+
+    it 'returns a hash of rental charge info' do
+      3.times { @kayak.add_hour }
+      subject.charge(@kayak)
+
+      charge_hash = { card_number: '4242424242424242', amount: 60 }
+      expect(subject.charge(@kayak)).to eql(charge_hash)
+    end
+
+    it "calculates rental charge using Boat's hours_rented attribute" do
+      @kayak.add_hour
+      subject.charge(@kayak)
+
+      expect(subject.charge(@kayak)[:amount]).to eql 20
+    end
+
+    it "calculates rental charge using Dock's max_rental_time attribute" do
+      10.times { @kayak.add_hour }
+      subject.charge(@kayak)
+
+      expect(subject.charge(@kayak)[:amount]).to eql 60
     end
   end
 end
