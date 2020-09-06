@@ -20,4 +20,11 @@ describe Boat do
       expect(subject.hours_rented).to eql 0
     end
   end
+
+  describe '#add_hour' do
+    it 'adds hours to hours_rented' do
+      3.times { subject.add_hour }
+      expect(subject.hours_rented).to eql 3
+    end
+  end
 end
