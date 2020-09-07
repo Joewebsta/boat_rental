@@ -30,6 +30,6 @@ class Dock
   end
 
   def log_hour
-    rental_log.each { |boat, _renter| boat.add_hour }
+    rental_log.each_key(&:add_hour)
   end
 end
