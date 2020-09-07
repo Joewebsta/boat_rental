@@ -6,7 +6,7 @@ describe Renter do
 
   describe '#init' do
     it 'is an instance of Renter' do
-      expect(subject).to be_a Renter
+      is_expected.to be_a Renter
     end
 
     it 'has a name' do

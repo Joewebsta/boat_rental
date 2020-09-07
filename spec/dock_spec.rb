@@ -11,7 +11,7 @@ describe Dock do
 
   describe '#init' do
     it 'is an instance of Dock' do
-      expect(subject).to be_a Dock
+      is_expected.to be_a Dock
     end
 
     it 'has name' do
@@ -49,18 +49,22 @@ describe Dock do
       expect(subject.charge(@kayak)).to eql(charge_hash)
     end
 
-    it "calculates rental charge using Boat's hours_rented attribute" do
-      @kayak.add_hour
-      subject.charge(@kayak)
+    context 'when hours_rented does not exceed max_rental_time' do
+      it 'calculates rental charge' do
+        @kayak.add_hour
+        subject.charge(@kayak)
 
-      expect(subject.charge(@kayak)[:amount]).to eql 20
+        expect(subject.charge(@kayak)[:amount]).to eql 20
+      end
     end
 
-    it "calculates rental charge using Dock's max_rental_time attribute" do
-      10.times { @kayak.add_hour }
-      subject.charge(@kayak)
+    context 'when hours_rented exceeds max_rental_time' do
+      it 'calculates rental charge' do
+        10.times { @kayak.add_hour }
+        subject.charge(@kayak)
 
-      expect(subject.charge(@kayak)[:amount]).to eql 60
+        expect(subject.charge(@kayak)[:amount]).to eql 60
+      end
     end
   end
 
@@ -74,17 +78,10 @@ describe Dock do
   end
 
   describe '#log_hour' do
-    before do
-      @canoe = Boat.new(:canoe, 30)
-      @joe = Renter.new('Joe Webster', '1234567890')
+    it "increases boat's hours_rented attribute" do
       subject.rent(@kayak, @patrick)
-      subject.rent(@canoe, @joe)
-    end
-
-    it 'increases hours_rented attribute for multiple boats' do
       2.times { subject.log_hour }
 
-      expect(@canoe.hours_rented).to eql 2
       expect(@kayak.hours_rented).to eql 2
     end
   end

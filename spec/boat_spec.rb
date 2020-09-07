@@ -5,7 +5,7 @@ describe Boat do
 
   describe '#init' do
     it 'is an instance of Boat' do
-      expect(subject).to be_a Boat
+      is_expected.to be_a Boat
     end
 
     it 'has a type' do
