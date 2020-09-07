@@ -25,6 +25,10 @@ describe Dock do
     it 'has an empty rental_log' do
       expect(subject.rental_log).to eql({})
     end
+
+    it 'has revenue of zero' do
+      expect(subject.revenue).to eql 0
+    end
   end
 
   describe '#rent' do
@@ -61,10 +65,11 @@ describe Dock do
   end
 
   describe '#return' do
-    before { subject.rent(@kayak, @patrick) }
-
     it 'removes boat from rental log' do
-      expect(subject.return(@kayak)).to eql({})
+      subject.rent(@kayak, @patrick)
+      @kayak.add_hour
+      subject.return(@kayak)
+      expect(subject.rental_log).to eql({})
     end
   end
 
@@ -81,6 +86,24 @@ describe Dock do
 
       expect(@canoe.hours_rented).to eql 2
       expect(@kayak.hours_rented).to eql 2
+    end
+  end
+
+  describe '#revenue' do
+    before do
+      subject.rent(@kayak, @patrick)
+      5.times { subject.log_hour }
+      subject.return(@kayak)
+
+      @canoe = Boat.new(:canoe, 30)
+      @joe = Renter.new('Joe Webster', '1234567890')
+      subject.rent(@canoe, @joe)
+      subject.log_hour
+      subject.return(@canoe)
+    end
+
+    it 'calculates revenue' do
+      expect(subject.revenue).to eql 90
     end
   end
 end
