@@ -34,7 +34,7 @@ describe Dock do
   describe '#rent' do
     it 'adds rented boats to rental_log' do
       subject.rent(@kayak, @patrick)
-      expect(subject.rental_log).to eql({ @kayak => @patrick })
+      expect(subject.rental_log).to eql(@kayak => @patrick)
     end
   end
 
@@ -44,8 +44,8 @@ describe Dock do
     it 'returns a hash of rental charge info' do
       3.times { @kayak.add_hour }
       subject.charge(@kayak)
-
       charge_hash = { card_number: '4242424242424242', amount: 60 }
+
       expect(subject.charge(@kayak)).to eql(charge_hash)
     end
 
@@ -67,8 +67,8 @@ describe Dock do
   describe '#return' do
     it 'removes boat from rental log' do
       subject.rent(@kayak, @patrick)
-      @kayak.add_hour
       subject.return(@kayak)
+
       expect(subject.rental_log).to eql({})
     end
   end
@@ -90,7 +90,7 @@ describe Dock do
   end
 
   describe '#revenue' do
-    before do
+    it 'calculates revenue' do
       subject.rent(@kayak, @patrick)
       5.times { subject.log_hour }
       subject.return(@kayak)
@@ -100,9 +100,7 @@ describe Dock do
       subject.rent(@canoe, @joe)
       subject.log_hour
       subject.return(@canoe)
-    end
 
-    it 'calculates revenue' do
       expect(subject.revenue).to eql 90
     end
   end
