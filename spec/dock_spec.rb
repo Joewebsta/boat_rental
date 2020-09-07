@@ -59,4 +59,12 @@ describe Dock do
       expect(subject.charge(@kayak)[:amount]).to eql 60
     end
   end
+
+  describe '#return' do
+    before { subject.rent(@kayak, @patrick) }
+
+    it 'removes boat from rental log' do
+      expect(subject.return(@kayak)).to eql({})
+    end
+  end
 end

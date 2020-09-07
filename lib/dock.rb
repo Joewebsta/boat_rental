@@ -22,4 +22,9 @@ class Dock
       amount: cost
     }
   end
+
+  def return(boat)
+    rental_log.delete(boat)
+    rental_log
+  end
 end
