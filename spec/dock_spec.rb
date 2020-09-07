@@ -67,4 +67,20 @@ describe Dock do
       expect(subject.return(@kayak)).to eql({})
     end
   end
+
+  describe '#log_hour' do
+    before do
+      @canoe = Boat.new(:canoe, 30)
+      @joe = Renter.new('Joe Webster', '1234567890')
+      subject.rent(@kayak, @patrick)
+      subject.rent(@canoe, @joe)
+    end
+
+    it 'increases hours_rented attribute for multiple boats' do
+      2.times { subject.log_hour }
+
+      expect(@canoe.hours_rented).to eql 2
+      expect(@kayak.hours_rented).to eql 2
+    end
+  end
 end

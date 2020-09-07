@@ -27,4 +27,8 @@ class Dock
     rental_log.delete(boat)
     rental_log
   end
+
+  def log_hour
+    rental_log.each { |boat, _renter| boat.add_hour }
+  end
 end
